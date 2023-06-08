@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="style.css" media="screen" />
+    
+</head>
+
+<body>
+    
+    <div id="booking-container">
+        <h2>Select the time slot you're available</h2>
+        
+        <form id="myForm" onsubmit="handleSubmit(event)">
+
+            <ul>
+                <li>
+                    <span id="date1" class="date"></span>
+                    <br>
+                    <button type="button" name="timeslot1" value="9:00">9:00</button>
+                    <button type="button" name="timeslot1" value="11:00">11:00</button>
+                    <button type="button" name="timeslot1" value="13:00">13:00</button>
+                    <button type="button" name="timeslot1" value="15:00">15:00</button>
+                    <button type="button" name="timeslot1" value="17:00">17:00</button>
+                    <button type="button" name="timeslot1" value="19:00">19:00</button>
+                </li>
+                <li>
+                    <span id="date2" class="date"></span>
+                    <br>
+                    <button type="button" name="timeslot2" value="9:00" disabled> 9:00</button>
+                    <button type="button" name="timeslot2" value="11:00">11:00</button>
+                    <button type="button" name="timeslot2" value="13:00">13:00</button>
+                    <button type="button" name="timeslot2" value="15:00" disabled>15:00</button>
+                    <button type="button" name="timeslot2" value="17:30">17:30</button>
+                    <button type="button" name="timeslot2" value="19:00">19:00</button>
+                </li>
+                <li>
+                    <span id="date3" class="date"></span>
+                    <br>
+                    <button type="button" name="timeslot3" value="9:00">9:00</button>
+                    <button type="button" name="timeslot3" value="11:00">11:00</button>
+                    <button type="button" name="timeslot3" value="13:00" disabled>13:00</button>
+                    <button type="button" name="timeslot3" value="15:00">15:00</button>
+                    <button type="button" name="timeslot3" value="17:00" disabled>17:00</button>
+                    <button type="button" name="timeslot3" value="19:00">19:00</button>
+                </li>
+                <li>
+                    <span id="date4" class="date"></span>
+                    <br>
+                    <button type="button" name="timeslot4" value="9:00">9:00</button>
+                    <button type="button" name="timeslot4" value="11:00">11:00</button>
+                    <button type="button" name="timeslot4" value="13:00">13:00</button>
+                    <button type="button" name="timeslot4" value="15:00">15:00</button>
+                    <button type="button" name="timeslot4" value="17:00">17:00</button>
+                    <button type="button" name="timeslot4" value="19:00">19:00</button>
+                </li>
+            </ul>
+            <br>
+            <!-- <button type="submit" >Book Slot</button> -->
+            <input type="submit" value="Book Slot">
+        </form>
+        <div id="booking-result"></div>
+    </div>
+    <!-- <script type="text/javascript" src="./scripts.js"></script> -->
+    <script>
+        var currentDate = new Date();
+        var date1 = new Date(currentDate.getTime());
+        var date2 = new Date(currentDate.getTime() + (1 * 24 * 60 * 60 * 1000));
+        var date3 = new Date(currentDate.getTime() + (2 * 24 * 60 * 60 * 1000));
+        var date4 = new Date(currentDate.getTime() + (3 * 24 * 60 * 60 * 1000));
+
+        document.getElementById("date1").innerText = date1.toDateString();
+        document.getElementById("date2").innerText = date2.toDateString();
+        document.getElementById("date3").innerText = date3.toDateString();
+        document.getElementById("date4").innerText = date4.toDateString();
+
+        var buttons = document.querySelectorAll("button");
+        buttons.forEach(function(button) {
+            button.addEventListener("click", function() {
+                buttons.forEach(function(btn) {
+                    btn.classList.remove("selected");
+                });
+                this.classList.add("selected");
+            });
+        });
+        const bookingResult = document.getElementById('booking-result');
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var selectedDate;
+            var selectedTimeSlot;
+
+            var dates = document.querySelectorAll("span[id^='date']");
+            dates.forEach(function(date) {
+                if (date.parentElement.querySelector("button.selected")) {
+                    selectedDate = date.innerText;
+                    selectedTimeSlot = date.parentElement.querySelector("button.selected").value;
+                }
+            });
+
+            if (selectedDate && selectedTimeSlot) {
+                console.log("Selected Date:", selectedDate);
+                console.log("Selected Time Slot:", selectedTimeSlot);
+                var dateObj = new Date(selectedDate);
+                var year = dateObj.getFullYear();
+                var month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                var day = String(dateObj.getDate()).padStart(2, '0');
+                var formattedDate = year + '-' + month + '-' + day;
+                console.log(formattedDate);
+                var formattedDateTime = formattedDate + "T" + selectedTimeSlot + ":00";
+
+                console.log("Formatted DateTime:", formattedDateTime);
+                // Perform further processing or submit the data
+                var requestData = {
+                id: 3,
+                dateTime: formattedDateTime,
+                approvalStatus: "Slot Booked! Go to Studio!"
+                };
+                console.log(JSON.stringify(requestData));
+                
+                var endpoint = 'http://localhost:8080/bookSlot/3'; // Replace with your API endpoint
+                
+                fetch(endpoint, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Booking failed!');
+                    }
+                })
+                .then(data => {
+                    // Handle the response data as needed
+                    document.getElementById('booking-result').textContent = 'Booking successful!';
+                    setTimeout(function() {
+                    window.close();
+                    }, 1000);
+                })
+                .catch(error => {
+                    // Handle errors
+                    document.getElementById('booking-result').textContent = error.message;
+                });
+                // setTimeout(function() {
+                //    window.location.href = "../form/Seller-Form.html";
+                //     }, 2000); 
+                
+
+
+
+            } 
+            else 
+            {
+                console.log("Please select a date and time slot.");
+                bookingResult.textContent = "Please select a date and time slot.";
+            }
+      
+
+
+        }
+
+
+
+
+
+
+
+
+        
+    </script>
+</body>
+
+</html>

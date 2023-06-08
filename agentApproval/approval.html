@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Approval</title>
+    <link rel="stylesheet" type="text/css" href="approval.css">
+</head>
+<body>
+    <div class="login-root">
+        <div class="box-root flex-flex flex-direction--column" style="min-height: 100vh;flex-grow: 1;">
+          <div class="box-root padding-top--24 flex-flex flex-direction--column" style="flex-grow: 1; z-index: 9;">
+            <div class="box-root padding-top--48 padding-bottom--24 flex-flex flex-justifyContent--center">
+              <h1><a >Walmart</a></h1>
+            </div>
+            <div class="formbg-outer">
+              <div class="formbg">
+                <div class="formbg-inner padding-horizontal--48">
+                  <h1>Product Details:- </h1>
+                    <br>
+                    <div class="field padding-bottom--15">
+                        <p>Item Id: <a id="name">1</a></p>
+                        <p>Quantity: <a id="quantity">2</a></p>
+                        <p>Price: <a id="price">3</a></p>
+                    </div>    
+                    
+                    
+                    
+                    <div class="container padding-bottom--24"></div>
+                        <input type="submit" name="submit" id="approve" value="Approve" onclick="approve()">
+                        <input type="submit" name="submit" id="reject" value="Reject" onclick="reject()">
+                    </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        const params = new URLSearchParams(window.location.search);
+        const name = params.get('name');
+        const quantity = params.get('quantity');
+        const price = params.get('price');
+
+        // Display the submitted data
+        document.getElementById('name').textContent = name;
+        document.getElementById('quantity').textContent = quantity;
+        document.getElementById('price').textContent = price;
+
+        function approve()
+        {
+            var requestData = {
+                id: 3,
+                approvalStatus: "Approved"
+                };
+                console.log(JSON.stringify(requestData));
+                
+                var endpoint = 'http://localhost:8080/bookSlot/book'; // Replace with your API endpoint
+                
+                fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Request failed!');
+                    }
+                })
+                .then(data => {
+                    // Handle the response data as needed
+                    console.log('Approval saved successfully!');
+                    alert('Approval saved successfully!');
+                    setTimeout(function() {
+                    window.close();
+                    }, 1000);
+                })
+                .catch(error => {
+                    // Handle errors
+                    console.log(error.message);
+                });
+        }
+        function reject()
+        {
+            var requestData = {
+                id: 3,
+                approvalStatus: "Rejected"
+                };
+                console.log(JSON.stringify(requestData));
+                
+                var endpoint = 'http://localhost:8080/bookSlot/book'; // Replace with your API endpoint
+                
+                fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Request failed!');
+                    }
+                })
+                .then(data => {
+                    // Handle the response data as needed
+                    console.log('Approval rejected successfully!');
+                    alert('Approval rejected successfully!');
+                    setTimeout(function() {
+                        window.close();
+                        }, 1000);
+                })
+                .catch(error => {
+                    // Handle errors
+                    console.log(error.message);
+                });
+        }
+      </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Submit Product Details</title>
+  <link rel="stylesheet" type="text/css" href="Seller-Form.css">
+</head>
+
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">let dest = "../../../agentApproval/approval.html";</script>
+  <script>
+  (function () {
+    emailjs.init("Yx9hNAKk-8v1Kv8aL"); //enter your owen public key
+    })();
+  </script>
+    
+    <div class="login-root">
+    <div class="box-root flex-flex flex-direction--column" style="min-height: 100vh;flex-grow: 1;">
+      <div class="box-root padding-top--24 flex-flex flex-direction--column" style="flex-grow: 1; z-index: 9;">
+        <div class="box-root padding-top--48 padding-bottom--24 flex-flex flex-justifyContent--center">
+          <h1><a >Walmart</a></h1>
+        </div>
+        <div class="formbg-outer">
+          <div class="formbg">
+            <div class="formbg-inner padding-horizontal--48">
+              <span class="padding-bottom--15">Product Details:</span>
+              <form id="product-details">
+                <div class="field padding-bottom--24">
+                  <label for="name">Item ID :</label>
+                  <input type="name" name="name" id="name">
+                </div>
+                <div class="field padding-bottom--24">
+                  <label for="quantity">Quantity :</label>
+                  <input type="number" name="quantity" id="quantity">
+                </div>
+                <div class="field padding-bottom--24">
+                  <label for="price">Price :</label>
+                  <input type="number" name="price" id="price">
+                </div>
+                <div class="field padding-bottom--24">
+                  <input type="submit" name="submit" id="submit" value="Submit">
+                </div>
+              </form>
+              <a class="padding-bottom--15" href="https://seller.walmart.com/">Register your item</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    document
+      .getElementById("product-details")
+      .addEventListener("submit", function (event) {
+        event.preventDefault();
+        checkID();
+        sendStatus();
+        
+      });
+      function checkID(){
+        const id=document.getElementById("name").value;
+
+        const apiEnd=`http://localhost:8080/registerItem/${id}`;
+            fetch(apiEnd)
+                .then(response => {
+                  if(response.ok)
+                  {
+                    console.log("Item registered");
+                    sendEmail();
+                  }
+                  else
+                  alert('Register the item first, then try again!')
+                }
+                )
+      }
+      
+    function sendEmail() {
+      let name= document.getElementById("name").value;
+      let quantity= document.getElementById("quantity").value;
+      let price= document.getElementById("price").value;
+      const url = `http://127.0.0.1:5500/agentApproval/approval.html?name=${encodeURIComponent(name)}&quantity=${encodeURIComponent(quantity)}&price=${encodeURIComponent(price)}`;
+      const url1=`http://127.0.0.1:5500/mumble2-master/room.html?room=1&role=seller`;
+      let concatenatedMessage= "Item ID: "+name+", Quantity: "+quantity+", Price: "+price;
+
+      const templateParams = {
+        message: concatenatedMessage,
+        receiverMail:"ritikraj210@gmail.com",
+        url: url,
+        url1: url1
+      };
+                  //your service id    //your template id
+      emailjs.send("service_uevfj0s", "template_cunki7f", templateParams).then(
+        function (response) {
+          console.log("Email sent successfully!", response.status, response.text);
+          alert("Form data submitted successfully!");
+          setTimeout(function() {
+          window.close();
+          }, 1000);
+          document.getElementById("product-details").reset();
+        },
+        function (error) {
+          console.error("Error sending email:", error);
+          alert("An error occurred while submitting the form.");
+        }
+      );
+    }
+    function sendStatus()
+        {
+            var requestData = {
+                id: 3,
+                approvalStatus: "Applied"
+                };
+                console.log(JSON.stringify(requestData));
+                
+                var endpoint = 'http://localhost:8080/bookSlot/book'; // Replace with your API endpoint
+                
+                fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Request failed!');
+                    }
+                })
+                .then(data => {
+                    // Handle the response data as needed
+                    console.log('Application status saved successfully!');
+                })
+                .catch(error => {
+                    // Handle errors
+                    console.log(error.message);
+                });
+        }
+  </script>
+</body>
+
+</html>

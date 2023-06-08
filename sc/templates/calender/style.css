@@ -1,0 +1,124 @@
+/* style.css */
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+  margin: 0;
+  padding: 0;
+}
+
+#booking-container {
+  width: auto;
+  margin: 50px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  border-top: 4px solid #0071dc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+h2 {
+  font-size: 24px;
+  line-height: 36px;
+  font-weight: 700;
+  color: #2e2f32;
+  font-family: BogleWeb,MyriadPro,Helvetica Neue,Helvetica,Arial,sans-serif;
+  margin-bottom: 8px!important;
+  box-sizing: border-box;
+  border: 0 solid;
+  text-align: center!important;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.date {
+  font-weight: 700;
+  color: #2e2f32;
+  font-family: BogleWeb,MyriadPro,Helvetica Neue,Helvetica,Arial,sans-serif;
+  margin-bottom: 8px!important;
+}
+ul {
+  list-style-type: none;
+  padding: auto;
+}
+
+li {
+  margin-bottom: 30px;
+}
+button:disabled {
+  background-color: #DDD;
+  color: white;
+  cursor: not-allowed;
+  border: none;
+}
+
+button{
+    padding: 8px 15px;
+    margin: 5px;
+    background-color: white;
+    color: #0071dc;
+    border: 2px solid #0071dc;
+    border-radius: 10px;
+    cursor: pointer;
+}
+button:hover:not(.selected):not(:disabled) {
+  background-color: #0071dc;
+  color: white;
+}
+
+button.selected {
+  background-color: #004f9a;
+  color: white;
+  border: 2px solid #004f9a;
+}
+
+
+
+
+input[type="date"],
+select {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+  color: #2e2f32;
+  font-family: BogleWeb,MyriadPro,Helvetica Neue,Helvetica,Arial,sans-serif;
+}
+
+
+input[type="submit"] {
+  margin: 0 auto;
+  padding: 0px 20px;
+  background-color: #0071dc;
+  color: #fff;
+  font-weight: 700;
+  align-items: center;
+  border: none;
+  border-radius: 100px;
+  font-family: BogleWeb,MyriadPro,Helvetica Neue,Helvetica,Arial,sans-serif;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+  font-size: 16px;
+  height: auto;
+  width: auto;
+  line-height: 40px;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+  background-color: #004f9a;
+}
+
+
+#booking-result {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+
